@@ -59,7 +59,7 @@ class App extends React.Component {
 							margin-top: 50px;
 						`}
 						size={100}
-						color={"#123666"}
+						color={"#9F75A8"}
 					/>
 				</div>
 			);
@@ -87,7 +87,7 @@ class App extends React.Component {
 									margin-top: 50px;
 								`}
 								size={100}
-								color={"#123abc"}
+								color={"#3AE2DE"}
 							/>
 						</div>
 					)}
