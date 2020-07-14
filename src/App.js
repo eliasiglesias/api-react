@@ -14,97 +14,95 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			users: [],
-			isLoaded: false,
-			error: null,
+			isLoading: true,
 			user: {},
 			showUser: false,
 		};
-
-		// Este enlace es necesario para hacer que `this` funcione en el callback
-		this.handleClick = this.handleClick.bind(this);
-
-		this.handleButtonClick = this.handleButtonClick.bind(this);
 	}
 
 	async componentDidMount() {
 		const usersList = await getUsers();
-		this.setState({ ...this.state, users: usersList, isLoaded: true });
+		this.setState({ ...this.state, users: usersList, isLoading: false });
 	}
 
-	// Pendiente de preguntar
-	componentWillUnmount() {
-		console.log("cuando es necesario este caso");
-	}
+	handleClick = (id) => {
+		this.setState({
+			...this.state,
+			isLoading: true,
+			showUser: true,
+		});
+		this.getUserData(id);
+	};
 
-	async handleClick(id) {
+	getUserData = async (id) => {
 		const userData = await getUser(id);
-		this.setState({ ...this.state, user: userData, showUser: true });
-	}
+		this.setState({
+			...this.state,
+			user: userData,
+			showUser: true,
+			isLoading: false,
+		});
+	};
 
-	handleButtonClick() {
-		this.setState({ ...this.state, showUser: false });
-	}
+	handleButtonClick = () => {
+		this.setState({ ...this.state, isLoading: false, showUser: false });
+	};
 
 	render() {
-		if (this.state.showUser) {
-			return (
-				<div className="App">
-					<Container>
-						<Row>
-							<ButtonInit handleClick={this.handleButtonClick} />
-						</Row>
-						<Row className="d-flex justify-content-center">
-							<Col xs="6">
-								<UsersTable
-									users={this.state.users}
-									handleClick={this.handleClick}
-								/>
-							</Col>
-						</Row>
-					</Container>
-
-					<Container>
-						<Row className="d-flex justify-content-center">
-							<Col xs="6">
-								<UserDetail user={this.state.user} />
-							</Col>
-						</Row>
-					</Container>
-				</div>
-			);
-		}
-		if (this.state.isLoaded) {
-			return (
-				<div className="App">
-					<Container>
-						<Row>
-							<ButtonInit handleClick={this.handleButtonClick} />
-						</Row>
-						<Row className="d-flex justify-content-center">
-							<Col xs="6">
-								<UsersTable
-									users={this.state.users}
-									handleClick={this.handleClick}
-								/>
-							</Col>
-						</Row>
-					</Container>
-				</div>
-			);
-		} else {
+		if (this.state.isLoading && !this.state.showUser) {
 			return (
 				<div>
 					<ClipLoader
 						css={css`
 							display: block;
 							margin: 0 auto;
+							margin-top: 50px;
 						`}
 						size={100}
-						color={"#123abc"}
+						color={"#123666"}
 					/>
 				</div>
 			);
-		}
+		} else
+			return (
+				<Container>
+					<Row>
+						<ButtonInit handleClick={this.handleButtonClick} />
+					</Row>
+					<Row className="d-flex justify-content-center">
+						<Col xs="6">
+							<UsersTable
+								users={this.state.users}
+								handleClick={this.handleClick}
+							/>
+						</Col>
+					</Row>
+
+					{this.state.isLoading && this.state.showUser && (
+						<div>
+							<ClipLoader
+								css={css`
+									display: block;
+									margin: 0 auto;
+									margin-top: 50px;
+								`}
+								size={100}
+								color={"#123abc"}
+							/>
+						</div>
+					)}
+
+					{!this.state.isLoading && this.state.showUser && (
+						<div>
+							<Row className="d-flex justify-content-center">
+								<Col xs="6">
+									<UserDetail user={this.state.user} />
+								</Col>
+							</Row>
+						</div>
+					)}
+				</Container>
+			);
 	}
 }
 

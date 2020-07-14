@@ -1,6 +1,6 @@
 const getUsers = async () => {
 	try {
-		const response = await fetch("https://reqres.in/api/users?delay=3");
+		const response = await fetch(`https://reqres.in/api/users?delay=2`);
 		const { data } = await response.json();
 		if (!response.ok) {
 			throw Error(response.statusText);
