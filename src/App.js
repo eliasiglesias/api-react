@@ -36,12 +36,14 @@ class App extends React.Component {
 
 	getUserData = async (id) => {
 		const userData = await getUser(id);
-		this.setState({
-			...this.state,
-			user: userData,
-			showUser: true,
-			isLoading: false,
-		});
+		if (this.state.isLoading && this.state.showUser) {
+			this.setState({
+				...this.state,
+				user: userData,
+				showUser: true,
+				isLoading: false,
+			});
+		}
 	};
 
 	handleButtonClick = () => {
